@@ -18,11 +18,20 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
     
+class AvailableSlot(models.Model):
+    teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='available_slots')
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.teacher.username} available from {self.start_time} to {self.end_time}"
+
 class Schedule(models.Model):
     teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sessions_as_teacher')
     learner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sessions_as_student')
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='scheduled_sessions')
     start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
     def __str__(self):
         return f"{self.teacher.username} teaches {self.learner.username} at {self.start_time}"

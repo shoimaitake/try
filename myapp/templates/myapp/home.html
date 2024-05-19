@@ -7,9 +7,33 @@
 <body>
 <h1>ホーム画面です</h1>
 
-<a href="{% url 'profile' %}">プロフィール</a>
+{% if user.is_authenticated %}
+    こんにちは、<a href="{% url 'profile' %}">{{user.username}}</a>さん！
+    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+    {% csrf_token %}
+    </form>
+    
+    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        ログアウト
+    </a>
+{% else %}
+    <a href="{% url 'login' %}">ログイン</a>
+{% endif %}
+<br>
+
 <a href="{% url 'reserve' %}">予約</a>
-<a href="{% url 'add_slot' %}">スロットの編集</a>
+<a href="{% url 'slots' %}">スロットの編集</a>
+
+<h2>Your Schedules</h2>
+<ul>
+    {% for schedule in schedules %}
+        <li>{{ schedule.teacher.username }} teaches {{ schedule.learner.username }} - {{ schedule.subject.name }} from {{ schedule.start_time }} to {{ schedule.end_time }}</li>
+    {% endfor %}
+    {% if not schedules %}
+        <li>No schedules found.</li>
+    {% endif %}
+</ul>
+
 
 </body>
 </html>
