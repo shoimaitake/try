@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse, Http404
 from django.utils import timezone
 from django.template import loader
 from django.middleware.csrf import get_token
+from django.contrib.auth.decorators import login_required
 import datetime
 import time
 import json
@@ -13,7 +14,7 @@ from .models import AvailableSlot, Subject, CustomUser, Schedule
 
 from .forms import SlotForm
 
-
+@login_required
 def HomeView(request):
     user = request.user
     schedules = Schedule.objects.filter(teacher=user) | Schedule.objects.filter(learner=user)
